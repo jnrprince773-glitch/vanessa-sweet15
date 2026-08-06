@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Vanessa | Sweet 15</title>
+
+    <meta name="theme-color" content="#8b5cf6">
+    <meta name="description" content="A special Sweet 15 birthday experience for Vanessa.">
+
+    <link rel="manifest" href="manifest.json">
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Aurora Background -->
+    <div id="aurora"></div>
+
+    <!-- Stars -->
+    <canvas id="stars"></canvas>
+
+    <!-- Fireworks -->
+    <canvas id="fireworks"></canvas>
+
+    <!-- Confetti -->
+    <canvas id="confetti"></canvas>
+
+    <!-- Birthday Vault -->
+    <section id="vault">
+
+        <div class="glass-card">
+
+            <h3>🔒 Birthday Vault</h3>
+
+            <h1>Sweet 15</h1>
+
+            <p>
+                This surprise unlocks on
+                <strong>September 1, 2026</strong>.
+            </p>
+
+            <div id="countdown">
+
+                <div class="box">
+                    <span id="days">00</span>
+                    <small>Days</small>
+                </div>
+
+                <div class="box">
+                    <span id="hours">00</span>
+                    <small>Hours</small>
+                </div>
+
+                <div class="box">
+                    <span id="minutes">00</span>
+                    <small>Minutes</small>
+                </div>
+
+                <div class="box">
+                    <span id="seconds">00</span>
+                    <small>Seconds</small>
+                </div>
+
+            </div>
+
+            <button id="unlockBtn" disabled>
+                Waiting...
+            </button>
+
+        </div>
+
+    </section>
+
+    <!-- Main Website -->
+    <main id="website" hidden>
+
+        <header>
+
+            <span class="badge">
+                Sweet 15 ✨
+            </span>
+
+            <h1>
+                Happy 15th Birthday,
+                Vanessa!
+            </h1>
+
+            <p>
+                15 years of pure chaos,
+                laughter,
+                dreams,
+                and unforgettable memories 💜
+            </p>
+
+        </header>
+
+        <section id="hero">
+
+            <button id="celebrateBtn">
+                Celebrate 🎉
+            </button>
+
+        </section>
+
+        <section id="gallery">
+
+            <h2>
+                Memory Gallery
+            </h2>
+
+            <div class="gallery-grid">
+
+                <!-- Photos go here -->
+
+            </div>
+
+        </section>
+
+        <section id="gift">
+
+            <h2>
+                🎁 Secret Gift
+            </h2>
+
+            <button id="giftBtn">
+                Open Gift
+            </button>
+
+        </section>
+
+        <section id="cake">
+
+            <h2>
+                🎂 Birthday Cake
+            </h2>
+
+            <button id="cakeBtn">
+                Light Candles
+            </button>
+
+        </section>
+
+    </main>
+
+    <script src="script.js"></script>
+
+</body>
+</html>
