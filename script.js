@@ -1,274 +1,106 @@
-/* ==========================================
-   Vanessa Sweet 15 — Stable Edition
-========================================== */
+/* Vanessa Sweet 15 — Ultimate Edition */
 
-// Use the birthday date in UTC so the vault behaves consistently on every device.
 const TARGET_DATE = new Date("2026-09-01T00:00:00Z");
+const $ = id => document.getElementById(id);
 
-const daysEl = document.getElementById("days");
-const hoursEl = document.getElementById("hours");
-const minutesEl = document.getElementById("minutes");
-const secondsEl = document.getElementById("seconds");
-const vault = document.getElementById("vault");
-const website = document.getElementById("website");
-const unlockBtn = document.getElementById("unlockBtn");
-const celebrateBtn = document.getElementById("celebrateBtn");
-const giftBtn = document.getElementById("giftBtn");
-const cakeBtn = document.getElementById("cakeBtn");
-
-function format(number) {
-    return String(Math.max(0, number)).padStart(2, "0");
-}
-
-// Countdown uses the device clock directly. This avoids the old dependency on
-// external time APIs, which could fail and leave the UI stuck at 00:00:00.
-function updateCountdown() {
-    const now = new Date();
-    const diff = TARGET_DATE.getTime() - now.getTime();
-
-    if (diff <= 0) {
-        unlockBirthday();
-        return;
-    }
-
-    const totalSeconds = Math.floor(diff / 1000);
-    const days = Math.floor(totalSeconds / 86400);
-    const hours = Math.floor((totalSeconds % 86400) / 3600);
-    const minutes = Math.floor((totalSeconds % 3600) / 60);
-    const seconds = totalSeconds % 60;
-
-    daysEl.textContent = format(days);
-    hoursEl.textContent = format(hours);
-    minutesEl.textContent = format(minutes);
-    secondsEl.textContent = format(seconds);
-
-    if (unlockBtn) {
-        unlockBtn.disabled = true;
-        unlockBtn.textContent = "Waiting...";
-    }
-}
+const daysEl = $("days"), hoursEl = $("hours"), minutesEl = $("minutes"), secondsEl = $("seconds");
+const vault = $("vault"), website = $("website"), unlockBtn = $("unlockBtn");
+const celebrateBtn = $("celebrateBtn"), cakeBtn = $("cakeBtn"), giftBtn = $("giftBtn"), fireworksBtn = $("fireworksBtn");
+const settingsBtn = $("settingsBtn"), settingsDialog = $("settingsDialog"), toast = $("toast");
+const reducedEffects = $("reducedEffects"), autoFireworks = $("autoFireworks");
 
 let birthdayUnlocked = false;
+let reduced = localStorage.getItem("vanessa-reduced") === "true";
+let auto = localStorage.getItem("vanessa-auto-fireworks") !== "false";
+if (reducedEffects) reducedEffects.checked = reduced;
+if (autoFireworks) autoFireworks.checked = auto;
 
-function unlockBirthday() {
-    if (birthdayUnlocked) return;
-    birthdayUnlocked = true;
-
-    if (vault) vault.style.display = "none";
-    if (website) website.hidden = false;
-
-    launchConfetti(150);
-    launchFireworks();
-
-    if ("speechSynthesis" in window) {
-        const speech = new SpeechSynthesisUtterance("Happy fifteenth Birthday Vanessa!");
-        speech.rate = 0.95;
-        speech.pitch = 1.2;
-        window.speechSynthesis.cancel();
-        window.speechSynthesis.speak(speech);
-    }
+function showToast(message) {
+  if (!toast) return;
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2600);
 }
 
-// Run immediately, then once per second.
+function format(n){return String(Math.max(0,n)).padStart(2,"0")}
+
+function updateCountdown(){
+  if(birthdayUnlocked) return;
+  const diff = TARGET_DATE.getTime() - Date.now();
+  if(diff <= 0){ unlockBirthday(); return; }
+  const total = Math.floor(diff/1000);
+  if(daysEl) daysEl.textContent = format(Math.floor(total/86400));
+  if(hoursEl) hoursEl.textContent = format(Math.floor(total%86400/3600));
+  if(minutesEl) minutesEl.textContent = format(Math.floor(total%3600/60));
+  if(secondsEl) secondsEl.textContent = format(total%60);
+}
+
+function unlockBirthday(){
+  if(birthdayUnlocked) return;
+  birthdayUnlocked = true;
+  vault?.classList.add("unlocked");
+  setTimeout(()=>{
+    if(vault) vault.style.display="none";
+    if(website) website.hidden=false;
+    launchConfetti(reduced ? 45 : 160);
+    launchFireworks(reduced ? 2 : 5);
+    if("speechSynthesis" in window){
+      speechSynthesis.cancel();
+      const voice=new SpeechSynthesisUtterance("Happy fifteenth birthday Vanessa!");
+      voice.rate=.95; voice.pitch=1.15; speechSynthesis.speak(voice);
+    }
+  },700);
+}
+
 updateCountdown();
-setInterval(updateCountdown, 1000);
+setInterval(updateCountdown,1000);
 
-/* ==========================================
-   Starfield
-========================================== */
+const starCanvas=$("stars"), starCtx=starCanvas?.getContext("2d");
+let stars=[];
+function resizeStars(){if(!starCanvas)return;starCanvas.width=innerWidth;starCanvas.height=innerHeight}
+function createStars(){if(!starCanvas)return;stars=Array.from({length:reduced?90:180},()=>({x:Math.random()*innerWidth,y:Math.random()*innerHeight,r:Math.random()*1.7+.3,v:Math.random()*.25+.04,a:Math.random()*.7+.2,t:Math.random()*.018+.004}))}
+function drawStars(){if(!starCtx)return;starCtx.clearRect(0,0,innerWidth,innerHeight);for(const s of stars){s.a+=s.t;if(s.a>=1||s.a<=.15)s.t*=-1;s.y+=s.v;if(s.y>innerHeight){s.y=-4;s.x=Math.random()*innerWidth}starCtx.beginPath();starCtx.arc(s.x,s.y,s.r,0,Math.PI*2);starCtx.fillStyle=`rgba(255,255,255,${s.a})`;starCtx.fill()}requestAnimationFrame(drawStars)}
+resizeStars();createStars();drawStars();addEventListener("resize",()=>{resizeStars();createStars()});
 
-const starCanvas = document.getElementById("stars");
-const starCtx = starCanvas ? starCanvas.getContext("2d") : null;
-let stars = [];
-
-function resizeStarCanvas() {
-    if (!starCanvas) return;
-    starCanvas.width = window.innerWidth;
-    starCanvas.height = window.innerHeight;
+function launchConfetti(count=120){
+  const canvas=$("confetti"),ctx=canvas?.getContext("2d");if(!ctx)return;
+  canvas.width=innerWidth;canvas.height=innerHeight;
+  const colors=["#ff4fc8","#8b5cf6","#67e8f9","#ffd166","#ffffff"];
+  const pieces=Array.from({length:count},()=>({x:Math.random()*canvas.width,y:-20-Math.random()*200,w:4+Math.random()*6,h:6+Math.random()*11,v:2+Math.random()*4,d:Math.random()*2-1,r:Math.random()*6,vr:Math.random()*.25-.12,c:colors[Math.floor(Math.random()*colors.length)],life:130+Math.random()*90}));
+  function frame(){ctx.clearRect(0,0,canvas.width,canvas.height);let alive=false;for(const p of pieces){if(p.life<=0)continue;alive=true;p.life--;p.y+=p.v;p.x+=p.d;p.r+=p.vr;ctx.save();ctx.translate(p.x,p.y);ctx.rotate(p.r);ctx.fillStyle=p.c;ctx.fillRect(-p.w/2,-p.h/2,p.w,p.h);ctx.restore()}if(alive)requestAnimationFrame(frame)}frame();
 }
 
-function createStars(count = 160) {
-    if (!starCanvas) return;
-    stars = Array.from({ length: count }, () => ({
-        x: Math.random() * starCanvas.width,
-        y: Math.random() * starCanvas.height,
-        radius: Math.random() * 1.8 + 0.4,
-        speed: Math.random() * 0.25 + 0.05,
-        alpha: Math.random() * 0.8 + 0.2,
-        twinkle: Math.random() * 0.02 + 0.005
-    }));
+function launchFireworks(bursts=4){
+  if(reduced) bursts=Math.min(2,bursts);
+  const canvas=$("fireworks"),ctx=canvas?.getContext("2d");if(!ctx)return;
+  canvas.width=innerWidth;canvas.height=innerHeight;
+  for(let b=0;b<bursts;b++) setTimeout(()=>fireworkBurst(ctx,canvas),b*420);
+}
+function fireworkBurst(ctx,canvas){
+  const x=canvas.width*(.18+Math.random()*.64), y=canvas.height*(.16+Math.random()*.35), hue=Math.floor(Math.random()*360);
+  const count=reduced?28:55;const particles=Array.from({length:count},(_,i)=>{const a=Math.PI*2*i/count+Math.random()*.1,s=2+Math.random()*3;return{x,y,vx:Math.cos(a)*s,vy:Math.sin(a)*s,life:45+Math.random()*20}});
+  function frame(){ctx.clearRect(0,0,canvas.width,canvas.height);let alive=false;for(const p of particles){if(p.life<=0)continue;alive=true;p.life--;p.x+=p.vx;p.y+=p.vy;p.vy+=.035;ctx.beginPath();ctx.arc(p.x,p.y,1.7,0,Math.PI*2);ctx.fillStyle=`hsl(${hue+Math.random()*50},100%,70%)`;ctx.fill()}if(alive)requestAnimationFrame(frame)}frame();
 }
 
-function drawStars() {
-    if (!starCanvas || !starCtx) return;
+celebrateBtn?.addEventListener("click",()=>{launchConfetti(reduced?60:180);launchFireworks(reduced?2:5);showToast("✨ Celebration mode activated!")});
+fireworksBtn?.addEventListener("click",()=>{launchFireworks(reduced?2:7);showToast("🎆 Fireworks launched!")});
 
-    starCtx.clearRect(0, 0, starCanvas.width, starCanvas.height);
-
-    stars.forEach(star => {
-        star.alpha += star.twinkle;
-        if (star.alpha >= 1 || star.alpha <= 0.2) star.twinkle *= -1;
-        star.y += star.speed;
-
-        if (star.y > starCanvas.height) {
-            star.y = -5;
-            star.x = Math.random() * starCanvas.width;
-        }
-
-        starCtx.beginPath();
-        starCtx.arc(star.x, star.y, star.radius, 0, Math.PI * 2);
-        starCtx.fillStyle = `rgba(255,255,255,${star.alpha})`;
-        starCtx.fill();
-    });
-
-    requestAnimationFrame(drawStars);
-}
-
-function shootingStar() {
-    if (!starCanvas || !starCtx) return;
-
-    const x = Math.random() * starCanvas.width;
-    const y = Math.random() * (starCanvas.height / 2);
-    starCtx.beginPath();
-    starCtx.moveTo(x, y);
-    starCtx.lineTo(x + 150, y + 60);
-    starCtx.strokeStyle = "rgba(255,255,255,.8)";
-    starCtx.lineWidth = 2;
-    starCtx.stroke();
-}
-
-resizeStarCanvas();
-createStars();
-drawStars();
-window.addEventListener("resize", () => {
-    resizeStarCanvas();
-    createStars();
-});
-setInterval(shootingStar, 8000);
-
-/* ==========================================
-   Effects — safe fallbacks so buttons never
-   throw ReferenceError if the canvas effects
-   are unavailable.
-========================================== */
-
-function launchConfetti(count = 100) {
-    const canvas = document.getElementById("confetti");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const pieces = Array.from({ length: count }, () => ({
-        x: Math.random() * canvas.width,
-        y: -20 - Math.random() * canvas.height * 0.3,
-        size: Math.random() * 7 + 4,
-        speed: Math.random() * 4 + 2,
-        drift: Math.random() * 2 - 1,
-        rotation: Math.random() * Math.PI,
-        rotationSpeed: Math.random() * 0.2 - 0.1,
-        life: 120 + Math.random() * 100
-    }));
-
-    function frame() {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        let alive = false;
-
-        pieces.forEach(p => {
-            if (p.life <= 0) return;
-            alive = true;
-            p.life--;
-            p.y += p.speed;
-            p.x += p.drift;
-            p.rotation += p.rotationSpeed;
-
-            ctx.save();
-            ctx.translate(p.x, p.y);
-            ctx.rotate(p.rotation);
-            ctx.fillStyle = `hsl(${Math.random() * 360}, 90%, 65%)`;
-            ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.65);
-            ctx.restore();
-        });
-
-        if (alive) requestAnimationFrame(frame);
-        else ctx.clearRect(0, 0, canvas.width, canvas.height);
-    }
-
-    frame();
-}
-
-function launchFireworks() {
-    const canvas = document.getElementById("fireworks");
-    if (!canvas) return;
-    const ctx = canvas.getContext("2d");
-    if (!ctx) return;
-
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
-
-    const bursts = 3;
-    for (let b = 0; b < bursts; b++) {
-        setTimeout(() => {
-            const x = canvas.width * (0.2 + Math.random() * 0.6);
-            const y = canvas.height * (0.2 + Math.random() * 0.35);
-            const particles = Array.from({ length: 45 }, (_, i) => {
-                const angle = (Math.PI * 2 * i) / 45;
-                return {
-                    x, y,
-                    vx: Math.cos(angle) * (2 + Math.random() * 3),
-                    vy: Math.sin(angle) * (2 + Math.random() * 3),
-                    life: 55
-                };
-            });
-
-            function animate() {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                let alive = false;
-                particles.forEach(p => {
-                    if (p.life <= 0) return;
-                    alive = true;
-                    p.life--;
-                    p.x += p.vx;
-                    p.y += p.vy;
-                    p.vy += 0.035;
-                    ctx.beginPath();
-                    ctx.arc(p.x, p.y, 2, 0, Math.PI * 2);
-                    ctx.fillStyle = `hsl(${Math.random() * 360}, 100%, 70%)`;
-                    ctx.fill();
-                });
-                if (alive) requestAnimationFrame(animate);
-            }
-            animate();
-        }, b * 450);
-    }
-}
-
-/* ==========================================
-   Buttons
-========================================== */
-
-celebrateBtn?.addEventListener("click", () => {
-    launchConfetti(180);
-    launchFireworks();
+giftBtn?.addEventListener("click",()=>{
+  launchConfetti(reduced?40:90);
+  showToast("🎁 Secret unlocked: Vanessa, you deserve a ridiculously good year.");
+  giftBtn.innerHTML='<span class="feature-icon">💜</span><small>GIFT UNLOCKED</small><strong>For you, Vanessa.</strong><em>Keep shining →</em>';
 });
 
-giftBtn?.addEventListener("click", () => {
-    alert("🎁 A special birthday surprise is waiting for you, Vanessa! 💜");
+cakeBtn?.addEventListener("click",()=>{
+  cakeBtn.innerHTML='<span class="feature-icon">🕯️</span><small>WISH COMPLETE</small><strong>15 candles are lit!</strong><em>Make your wish ✨</em>';
+  launchConfetti(reduced?45:110);launchFireworks(reduced?2:4);showToast("🎂 Candles lit. Make a wish!");
 });
 
-cakeBtn?.addEventListener("click", () => {
-    cakeBtn.textContent = "✨ Candles Lit! Make a Wish! 🎂";
-    cakeBtn.disabled = true;
-    launchConfetti(80);
-});
+settingsBtn?.addEventListener("click",()=>settingsDialog?.showModal());
+reducedEffects?.addEventListener("change",e=>{reduced=e.target.checked;localStorage.setItem("vanessa-reduced",reduced);createStars();showToast(reduced?"🌙 Reduced effects enabled":"✨ Full effects restored")});
+autoFireworks?.addEventListener("change",e=>{auto=e.target.checked;localStorage.setItem("vanessa-auto-fireworks",auto);showToast(auto?"🎆 Auto fireworks enabled":"🛑 Auto fireworks disabled")});
 
-window.addEventListener("resize", () => {
-    ["confetti", "fireworks"].forEach(id => {
-        const canvas = document.getElementById(id);
-        if (canvas) {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-    });
-});
+if(auto) setInterval(()=>{if(!reduced && !document.hidden && website && !website.hidden) launchFireworks(1)},18000);
+
+addEventListener("resize",()=>["fireworks","confetti"].forEach(id=>{const c=$(id);if(c){c.width=innerWidth;c.height=innerHeight}}));
