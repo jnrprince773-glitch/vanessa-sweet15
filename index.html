@@ -1,150 +1,122 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>Vanessa | Sweet 15</title>
-
-    <meta name="theme-color" content="#8b5cf6">
-    <meta name="description" content="A special Sweet 15 birthday experience for Vanessa.">
-
-    <link rel="manifest" href="manifest.json">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#13072b">
+  <meta name="description" content="Vanessa Sweet 15 — an interactive digital birthday experience.">
+  <title>Vanessa | Sweet 15 💜</title>
+  <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
+  <div id="aurora"></div>
+  <canvas id="stars" aria-hidden="true"></canvas>
+  <canvas id="fireworks" aria-hidden="true"></canvas>
+  <canvas id="confetti" aria-hidden="true"></canvas>
 
-    <!-- Aurora Background -->
-    <div id="aurora"></div>
+  <div class="noise" aria-hidden="true"></div>
 
-    <!-- Stars -->
-    <canvas id="stars"></canvas>
+  <section id="vault" class="screen vault-screen">
+    <div class="vault-orb">15</div>
+    <div class="glass-card vault-card">
+      <div class="eyebrow">PRIVATE BIRTHDAY EXPERIENCE</div>
+      <h1>Vanessa<span>Sweet 15</span></h1>
+      <p class="vault-copy">A little universe built just for you. This surprise unlocks on <strong>September 1, 2026</strong>.</p>
+      <div id="countdown" class="countdown">
+        <div class="count-box"><span id="days">00</span><small>DAYS</small></div>
+        <div class="count-box"><span id="hours">00</span><small>HOURS</small></div>
+        <div class="count-box"><span id="minutes">00</span><small>MINUTES</small></div>
+        <div class="count-box"><span id="seconds">00</span><small>SECONDS</small></div>
+      </div>
+      <button id="unlockBtn" class="primary-btn" disabled><span class="btn-glow"></span>🔐 Waiting for the moment…</button>
+      <div class="vault-foot"><span>✦ encrypted surprise</span><span>✦ made with love</span><span>✦ sweet fifteen</span></div>
+    </div>
+  </section>
 
-    <!-- Fireworks -->
-    <canvas id="fireworks"></canvas>
+  <main id="website" hidden>
+    <nav class="topbar glass-panel">
+      <a href="#home" class="brand">V<span>15</span></a>
+      <div class="nav-links">
+        <a href="#home">Home</a><a href="#memories">Memories</a><a href="#letter">Letter</a><a href="#celebration">Celebrate</a>
+      </div>
+      <button id="settingsBtn" class="icon-btn" aria-label="Open settings">⚙</button>
+    </nav>
 
-    <!-- Confetti -->
-    <canvas id="confetti"></canvas>
-
-    <!-- Birthday Vault -->
-    <section id="vault">
-
-        <div class="glass-card">
-
-            <h3>🔒 Birthday Vault</h3>
-
-            <h1>Sweet 15</h1>
-
-            <p>
-                This surprise unlocks on
-                <strong>September 1, 2026</strong>.
-            </p>
-
-            <div id="countdown">
-
-                <div class="box">
-                    <span id="days">00</span>
-                    <small>Days</small>
-                </div>
-
-                <div class="box">
-                    <span id="hours">00</span>
-                    <small>Hours</small>
-                </div>
-
-                <div class="box">
-                    <span id="minutes">00</span>
-                    <small>Minutes</small>
-                </div>
-
-                <div class="box">
-                    <span id="seconds">00</span>
-                    <small>Seconds</small>
-                </div>
-
-            </div>
-
-            <button id="unlockBtn" disabled>
-                Waiting...
-            </button>
-
+    <header id="home" class="hero-section section-shell">
+      <div class="hero-copy">
+        <div class="eyebrow">01 / BIRTHDAY HUB</div>
+        <span class="badge">SWEET 15 ✦ 2026</span>
+        <h1>Happy 15th<br><span>Vanessa.</span></h1>
+        <p>Fifteen chapters of laughter, chaos, dreams and memories. Today, the next one begins.</p>
+        <div class="hero-actions">
+          <button id="celebrateBtn" class="primary-btn">Celebrate 🎉</button>
+          <a href="#letter" class="ghost-btn">Open the letter →</a>
         </div>
+      </div>
+      <div class="hero-art">
+        <div class="orbit orbit-one"></div><div class="orbit orbit-two"></div>
+        <div class="birthday-core"><span>15</span><small>YEARS<br>OF MAGIC</small></div>
+        <div class="floating-chip chip-one">✨ NEW ERA</div>
+        <div class="floating-chip chip-two">💜 BIRTHDAY GIRL</div>
+      </div>
+    </header>
 
+    <section class="section-shell stats-grid">
+      <article class="glass-panel stat-card"><span class="stat-icon">🎂</span><small>MISSION</small><strong>Make today unforgettable</strong></article>
+      <article class="glass-panel stat-card"><span class="stat-icon">💫</span><small>STATUS</small><strong class="live-dot">Celebration online</strong></article>
+      <article class="glass-panel stat-card"><span class="stat-icon">🎆</span><small>ENERGY</small><strong>100% birthday mode</strong></article>
     </section>
 
-    <!-- Main Website -->
-    <main id="website" hidden>
+    <section id="memories" class="section-shell content-section">
+      <div class="section-heading"><div><div class="eyebrow">02 / MEMORY VAULT</div><h2>Little moments.<br><span>Big memories.</span></h2></div><p>A gallery shell ready for the pictures, screenshots and inside jokes that belong to this chapter.</p></div>
+      <div class="memory-grid">
+        <article class="memory-card memory-main"><div class="memory-art art-one"><span>✨</span></div><div class="memory-info"><small>MEMORY 01</small><h3>The beginning</h3><p>Every great story starts with one tiny moment.</p></div></article>
+        <article class="memory-card"><div class="memory-art art-two"><span>💜</span></div><div class="memory-info"><small>MEMORY 02</small><h3>Good chaos</h3><p>The kind of laughter you never forget.</p></div></article>
+        <article class="memory-card"><div class="memory-art art-three"><span>🌙</span></div><div class="memory-info"><small>MEMORY 03</small><h3>Late-night energy</h3><p>Dreams feel bigger after midnight.</p></div></article>
+        <article class="memory-card"><div class="memory-art art-four"><span>🎈</span></div><div class="memory-info"><small>MEMORY 04</small><h3>Sweet fifteen</h3><p>A new chapter, waiting to be written.</p></div></article>
+      </div>
+    </section>
 
-        <header>
+    <section id="letter" class="section-shell content-section letter-section">
+      <div class="letter-card glass-panel">
+        <div class="letter-seal">💌</div>
+        <div class="eyebrow">03 / A LETTER FOR VANESSA</div>
+        <h2>For the birthday girl.</h2>
+        <div id="letterContent" class="letter-content">
+          <p>Vanessa, today isn't just another date on the calendar. It's a reminder of how much light one person can bring into the lives around them.</p>
+          <p>Keep laughing loudly, dreaming ridiculously, and becoming the person you want to be. Fifteen is only the opening scene.</p>
+          <p>Keep shining. Keep smiling. Keep being Nessy. ✨</p>
+        </div>
+        <div class="signature">— someone who wanted your Sweet 15 to feel a little magical 💜</div>
+      </div>
+    </section>
 
-            <span class="badge">
-                Sweet 15 ✨
-            </span>
+    <section id="celebration" class="section-shell content-section celebration-section">
+      <div class="section-heading"><div><div class="eyebrow">04 / CELEBRATION CORE</div><h2>Press the buttons.<br><span>Cause some chaos.</span></h2></div><p>This is the fun part. Light the cake, launch the fireworks and unlock your little surprises.</p></div>
+      <div class="celebration-grid">
+        <button id="cakeBtn" class="feature-card cake-card"><span class="feature-icon">🎂</span><small>CAKE PROTOCOL</small><strong>Light the 15 candles</strong><em>Make a wish →</em></button>
+        <button id="giftBtn" class="feature-card gift-card"><span class="feature-icon">🎁</span><small>SECRET GIFT</small><strong>Open the mystery</strong><em>There might be something inside →</em></button>
+        <button id="fireworksBtn" class="feature-card fire-card"><span class="feature-icon">🎆</span><small>FINALE MODE</small><strong>Launch fireworks</strong><em>Go big or go home →</em></button>
+      </div>
+    </section>
 
-            <h1>
-                Happy 15th Birthday,
-                Vanessa!
-            </h1>
+    <footer class="section-shell footer glass-panel">
+      <div><strong>Vanessa Sweet 15</strong><span>Built as a digital memory, not just a webpage.</span></div>
+      <span>© 2026 · Made with 💜 + code</span>
+    </footer>
+  </main>
 
-            <p>
-                15 years of pure chaos,
-                laughter,
-                dreams,
-                and unforgettable memories 💜
-            </p>
+  <dialog id="settingsDialog" class="settings-dialog">
+    <form method="dialog" class="glass-panel settings-card">
+      <button value="cancel" class="close-btn" aria-label="Close">×</button>
+      <div class="eyebrow">SYSTEM SETTINGS</div><h2>Birthday controls</h2>
+      <label class="toggle-row"><span>Reduced effects</span><input id="reducedEffects" type="checkbox"><i></i></label>
+      <label class="toggle-row"><span>Auto fireworks</span><input id="autoFireworks" type="checkbox" checked><i></i></label>
+      <p class="settings-note">Your preferences stay on this device.</p>
+    </form>
+  </dialog>
 
-        </header>
-
-        <section id="hero">
-
-            <button id="celebrateBtn">
-                Celebrate 🎉
-            </button>
-
-        </section>
-
-        <section id="gallery">
-
-            <h2>
-                Memory Gallery
-            </h2>
-
-            <div class="gallery-grid">
-
-                <!-- Photos go here -->
-
-            </div>
-
-        </section>
-
-        <section id="gift">
-
-            <h2>
-                🎁 Secret Gift
-            </h2>
-
-            <button id="giftBtn">
-                Open Gift
-            </button>
-
-        </section>
-
-        <section id="cake">
-
-            <h2>
-                🎂 Birthday Cake
-            </h2>
-
-            <button id="cakeBtn">
-                Light Candles
-            </button>
-
-        </section>
-
-    </main>
-
-    <script src="script.js"></script>
-
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="script.js"></script>
 </body>
 </html>
